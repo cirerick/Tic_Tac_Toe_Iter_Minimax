@@ -1,0 +1,83 @@
+pub fn minimax(board: &Vec<Vec<char>>) -> (usize, usize){
+    //prototyping
+    let mut best_move: (usize, usize) = (0, 0); //get this at lv 1
+    let mut best_score: i8 = 0; //and this
+    let mut score: Option<i8> = None;
+
+    //get stack
+    let mut stack: Vec<State> = Vec::new();
+
+    //root
+    stack.push(State::new(board.clone(), vec![], None));
+
+    //board to be manipulated
+    let mut o_temp_board: Vec<Vec<char>> = board.clone();
+
+    let max_char: char = 'X'; //Player char
+    let min_char: char = 'O'; //AI char
+
+    let mut max_turn: bool = true;
+    
+    for _i in 0..o_temp_board.len(){
+        for _j in 0..o_temp_board.len(){
+            //1st level check space empty then make theoretical move
+            if o_temp_board[_i][_j]  == '_' { //check for mini, ai will always be mini for this program //save this as move if best
+                o_temp_board[_i][_j] = min_char;
+                stack.push(State::new(o_temp_board.clone(), vec[], evaluate(&o_temp_board, min_char)));
+
+                let mut found_none: bool = true;
+                if stack[stack.len() - 1].score.is_some(){
+                    found_none = false;
+                }
+
+                let mut iter: usize = 1; //check all
+
+                while found_none { //needs to be reworked
+                    found_none = false; //assume
+                    //max turn, push all spots it could possibly go on
+                    
+                    /* keep track of all nodes that have been changed */
+                    let mut range 
+                    for _max_i in 0..3{
+                        for _max_j in 0..3{
+                            if stack[iter].board[_max_i][_max_j] == '_'{
+                                let mut temp_board: Vec<Vec<char>> = stack[iter].board.clone();
+                                temp_board[_max_i][_max_j] = max_char;
+                                stack.push(State::new(temp_board.clone(), 0, evaluate(&temp_board, max_char)));
+                                //checking for none to continue building tree
+                                if stack[stack.len() - 1].score.is_none(){
+                                    found_none = true;
+                                }
+                
+                            }
+                        }
+                    }//end of finding empty space for max
+                    
+                    iter += 1;
+
+                    //mins to populate it's level
+                    for _min_i in 0..3{
+                        for _min_j in 0..3{
+                            if stack[iter].board[_min_i][_min_j] == '_'{ //previous board
+                                let mut temp_board: Vec<Vec<char>> = stack[iter].board.clone();
+                                temp_board[_min_i][_min_j] = min_char;
+                                stack.push(State::new(temp_board.clone(), 0, evaluate(&temp_board, min_char))); //we can check here if one of scores are none
+                                if stack[stack.len() - 1].score.is_none(){
+                                    found_none = true;
+                                }
+                            }
+                        }
+                    }
+                    //end of finding empty space for max
+                }
+
+                //ripple back the stack until root is left
+                while stack.len() > 1 {
+
+                }
+            }
+        }
+    }
+       
+    return best_move
+}
